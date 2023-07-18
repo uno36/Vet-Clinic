@@ -1,7 +1,5 @@
 /*Queries that provide answers to the questions from all projects.*/
 
-SELECT * from animals WHERE name = 'Luna';
-
 --- 1. Find all animals whose name ends in "mon":
 SELECT * FROM animals WHERE name LIKE '%mon';
 
