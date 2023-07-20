@@ -40,6 +40,28 @@ ADD owner_id INTEGER,
 CONSTRAINT fk_owner_id
 FOREIGN KEY (owner_id) REFERENCES owners (id);
 
+CREATE TABLE vets (
+  id serial PRIMARY KEY,
+  name varchar(50),
+  age integer,
+  date_of_graduation date
+);
+
+CREATE TABLE specializations (
+  vet_id integer REFERENCES vets(id),
+  species_id integer REFERENCES species(id),
+  PRIMARY KEY (vet_id, species_id)
+);
+
+CREATE TABLE visits (
+  visit_id serial PRIMARY KEY,
+  animal_id integer REFERENCES animals(id),
+  vet_id integer REFERENCES vets(id),
+  visit_date date
+);
+
+
+
 
 
 
