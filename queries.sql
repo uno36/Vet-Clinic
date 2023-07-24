@@ -172,7 +172,7 @@ ORDER BY v.visit_date DESC
 LIMIT 1;
 
 --- 2. How many different animals did Stephanie Mendez see?
-SELECT COUNT(DISTINCT a.id) AS num_of_animals_seen
+SELECT DISTINCT a.name
 FROM animals a
 JOIN visits v ON a.id = v.animal_id
 JOIN vets vt ON v.vet_id = vt.id
@@ -201,36 +201,37 @@ ORDER BY num_of_visits DESC
 LIMIT 1;
 
 --- 6. Who was Maisy Smith's first visit?
-SELECT a.name AS animal_name, vt.name AS vet_name, MIN(v.visit_date) AS first_visit_date
+SELECT a.name AS first_visit_animal
 FROM animals a
 JOIN visits v ON a.id = v.animal_id
 JOIN vets vt ON v.vet_id = vt.id
 WHERE vt.name = 'Maisy Smith'
-GROUP BY a.name, vt.name;
-
---- 7. Details for the most recent visit: animal information, vet information, and date of visit.
-SELECT a.name AS animal_name, v.name AS vet_name, v.visit_date AS last_visit_date
-FROM animals a
-JOIN visits v ON a.id = v.animal_id
-ORDER BY v.visit_date DESC
+ORDER BY v.visit_date ASC
 LIMIT 1;
 
---- 8. How many visits were with a vet that did not specialize in that animal's species?
-SELECT COUNT(*) AS num_of_visits_without_specialty
-FROM visits v
+
+--- 7. Details for the most recent visit: animal information, vet information, and date of visit.
+SELECT a.name AS animal_name, vt.name AS vet_name, v.visit_date
+FROM animals a
+JOIN visits v ON a.id = v.animal_id
 JOIN vets vt ON v.vet_id = vt.id
-LEFT JOIN specializations sp ON vt.id = sp.vet_id AND v.animal_id = sp.species_id
-WHERE sp.vet_id IS NULL;
+WHERE v.visit_date = (SELECT MAX(visit_date) FROM visits);
+
+
+--- 8. How many visits were with a vet that did not specialize in that animal's species?
+SELECT * FROM animals;SELECT COUNT(v.id) AS num_visits_without_specialty
+
 
 
 --- 9. What specialty should Maisy Smith consider getting? Look for the species she gets the most.
-SELECT s.name AS recommended_specialty, COUNT(v.animal_id) AS num_of_visits
+SELECT s.name AS most_visited_species
 FROM animals a
 JOIN visits v ON a.id = v.animal_id
-JOIN specializations sp ON a.id = sp.species_id
+JOIN specializations sp ON a.species_id = sp.species_id
 JOIN species s ON sp.species_id = s.id
-JOIN vets vt ON sp.vet_id = vt.id
+JOIN vets vt ON v.vet_id = vt.id
 WHERE vt.name = 'Maisy Smith'
 GROUP BY s.name
-ORDER BY num_of_visits DESC
+ORDER BY COUNT(*) DESC
 LIMIT 1;
+
