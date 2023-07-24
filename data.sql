@@ -120,4 +120,6 @@ JOIN
     ('Blossom', 'William Tatcher', '2021-01-11')
   ) AS data(animal, vet, visit_date) ON a.name = data.animal AND v.name = data.vet;
 
+  insert into owners (full_name, email) select 'Owner ' || generate_series(1,2500000), 'owner_' || generate_series(1,2500000) || '@mail.com';
+
 
