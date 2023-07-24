@@ -119,5 +119,16 @@ JOIN
     ('Blossom', 'Stephanie Mendez', '2020-05-24'),
     ('Blossom', 'William Tatcher', '2021-01-11')
   ) AS data(animal, vet, visit_date) ON a.name = data.animal AND v.name = data.vet;
+  
+  INSERT INTO visits (animal_id, vet_id, visit_date)
+  SELECT * FROM (SELECT id FROM animals) animal_ids, 
+  (SELECT id FROM vets) vets_ids, generate_series('1980-01-01'::timestamp, '2021-01-01', '4 hours') visit_timestamp;
 
+  insert into owners (full_name, email) select 'Owner ' || generate_series(1,2500000), 'owner_' || generate_series(1,2500000) || '@mail.com';
+
+SELECT COUNT(*) FROM visits where animal_id = 4;
+
+SELECT * FROM visits where vet_id = 2;
+
+SELECT * FROM owners where email = 'owner_18327@mail.com';
 
